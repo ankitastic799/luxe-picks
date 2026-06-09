@@ -92,7 +92,7 @@
     .product-badge { position: absolute; top: 1rem; left: 1rem; background: var(--gold); color: var(--ink); font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.7rem; }
     .badge-new { background: var(--ink); color: var(--white); }
     .badge-sale { background: #C94C4C; color: var(--white); }
-    .quick-view { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--ink); color: var(--white); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.5rem 1.2rem; white-space: nowrap; opacity: 0; transition: opacity 0.25s, transform 0.25s; }
+    .click-badge{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.7);color:#fff;padding:4px 8px;border-radius:20px;font-size:12px;z-index:2;} .quick-view { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--ink); color: var(--white); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.5rem 1.2rem; white-space: nowrap; opacity: 0; transition: opacity 0.25s, transform 0.25s; }
     .product-card:hover .quick-view { opacity: 1; transform: translateX(-50%) translateY(0); }
     .wish-btn { position: absolute; top: 1rem; right: 1rem; width: 36px; height: 36px; background: var(--white); border: 1px solid var(--mist); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; z-index: 2; }
     .wish-btn:hover { background: var(--gold); border-color: var(--gold); }
@@ -425,41 +425,32 @@
   </footer>
 
   <div class="toast" id="toast"></div>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     // ── PRODUCT DATA ──
-    const products = [
-      {
-        id: 1, brand: "Royal Pro", name: "Adhesive Organizer Accessories",
-        price: "₹699", orig: "₹1499", rating: 3.8, reviews: "162",
-        badge: "Best Seller", badgeClass: "", category: "home",
-        img: "https://m.media-amazon.com/images/I/61bgdxqBKbL._SL1108_.jpg",
-        url: "https://www.amazon.in/Royal-Pro-Bathroom-Adhesive-Organizer-Accessories/dp/B0DJ5S3BRS?linkCode=ll2&tag=ankitaastic-21"
-      },
-      {
-        id: 2, brand: "Zulaxy", name: "Photo Frame Hooks for Wall Without Drilling",
-        price: "₹268", orig: "₹1299", rating: 4.0, reviews: "9.9K",
-        badge: "Best Seller", badgeClass: "", category: "home",
-        img: "https://m.media-amazon.com/images/I/61WnmpLwAQL._SL1500_.jpg",
-        url: "https://www.amazon.in/Zulaxy-Drilling-Adhesive-Transparent-Stainless/dp/B0CCM8L54V?linkCode=ll2&tag=ankitaastic-21"
-      },
-      {
-        id: 3, brand: "Cetaphil", name: "Gentle Skin Hydrating Face Wash",
-        price: "₹371", orig: "₹429", rating: 4.4, reviews: "44.5K",
-        badge: "Best Seller", badgeClass: "", category: "beauty",
-        img: "https://m.media-amazon.com/images/I/61Ti2uv6V3L._SL1500_.jpg",
-        url: "https://www.amazon.in/Cetaphil-Hydrating-Sulphate-Free-Niacinamide-Sensitive/dp/B01CCGW4OE?linkCode=ll2&tag=ankitaastic-21"
-      },
-      {
-        id: 4, brand: "Pigeon", name: "Pigeon Press Chopper 1000ml",
-        price: "₹349", orig: "₹745", rating: 4.1, reviews: "1.0K",
-        badge: "Best Seller", badgeClass: "", category: "home",
-        img: "https://m.media-amazon.com/images/I/716V4se5MUL._SL1500_.jpg",
-        url: "https://www.amazon.in/Pigeon-Press-Chopper-1000ml-Red/dp/B0C7BYK2QW?linkCode=ll2&tag=ankitaastic-21"
-      }
-    ];
+    const SUPABASE_URL ='https://ufunylhheocnqnqahmhp.supabase.co';
+    const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmdW55bGhoZW9jbnFucWFobWhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5OTc4MDYsImV4cCI6MjA5NjU3MzgwNn0.U_a-zG8noY6J69pvo4_NQsIdgBTwV2CrC39psovNjZU';
+    const supabaseClient = supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+    let products = [];
 
-    const categories = [
+    async function loadProducts(){
+      const {data,error}=await supabaseClient.from('products').select('*');
+      if(error){console.error(error);return;}
+      products=data||[];
+      renderProducts(activeFilter);
+    }
+
+    async function incrementClick(productId){
+      const product=products.find(p=>p.id===productId);
+      if(!product) return;
+      await supabaseClient.from('products').update({clicks:(product.clicks||0)+1}).eq('id',productId);
+    }
+
+    supabaseClient.channel('products-live')
+      .on('postgres_changes',{event:'*',schema:'public',table:'products'},()=>loadProducts())
+      .subscribe();
+
+const categories = [
       { name: "Electronics", count: "2,400+ items", img: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500&q=80", url: "https://www.amazon.in/electronics" },
       { name: "Home & Kitchen", count: "5,100+ items", img: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&q=80", url: "https://www.amazon.in/home-kitchen" },
       { name: "Fashion", count: "9,800+ items", img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500&q=80", url: "https://www.amazon.in/fashion" },
@@ -505,7 +496,7 @@
     // ── RENDER PRODUCTS ──
     function renderProducts(filter) {
       const grid = document.getElementById('products-grid');
-      const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+      let filtered = filter === 'all' ? products : products.filter(p => p.category === filter); filtered.sort((a,b)=>(b.clicks||0)-(a.clicks||0));
       grid.innerHTML = '';
       filtered.forEach((p, i) => {
         const card = document.createElement('a');
@@ -514,12 +505,12 @@
         card.target = '_blank';
         card.rel = 'noopener noreferrer';
         // ── TRACK CLICK ──
-        card.addEventListener('click', () => trackProductClick(p));
+        card.addEventListener('click', async () => {trackProductClick(p); await incrementClick(p.id);});
         card.innerHTML = `
           <div class="product-img-wrap">
             <img src="${p.img}" alt="${p.name}" loading="lazy" />
             ${p.badge ? `<span class="product-badge ${p.badgeClass}">${p.badge}</span>` : ''}
-            <span class="quick-view">View on Amazon</span>
+            <span class="quick-view">View on Amazon</span><div class="click-badge">❤️ ${p.clicks || 0}</div>
             <button class="wish-btn" onclick="wishlist(event, ${p.id})" aria-label="Save to wishlist">♡</button>
           </div>
           <div class="product-info">
@@ -617,7 +608,7 @@
       document.body.style.overflow = '';
     }
 
-    renderProducts('all');
+    loadProducts();
     renderCategories();
     observeReveal();
   </script>
