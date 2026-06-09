@@ -430,11 +430,11 @@
     // ── PRODUCT DATA ──
     const SUPABASE_URL ='https://ufunylhheocnqnqahmhp.supabase.co';
     const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmdW55bGhoZW9jbnFucWFobWhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5OTc4MDYsImV4cCI6MjA5NjU3MzgwNn0.U_a-zG8noY6J69pvo4_NQsIdgBTwV2CrC39psovNjZU';
-    const supabase = window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+    const supabaseClient = supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
     let products = [];
 
     async function loadProducts(){
-      const {data,error}=await supabase.from('products').select('*');
+      const {data,error}=await supabaseClient.from('products').select('*');
       if(error){console.error(error);return;}
       products=data||[];
       renderProducts(activeFilter);
@@ -443,10 +443,10 @@
     async function incrementClick(productId){
       const product=products.find(p=>p.id===productId);
       if(!product) return;
-      await supabase.from('products').update({clicks:(product.clicks||0)+1}).eq('id',productId);
+      await supabaseClient.from('products').update({clicks:(product.clicks||0)+1}).eq('id',productId);
     }
 
-    supabase.channel('products-live')
+    supabaseClient.channel('products-live')
       .on('postgres_changes',{event:'*',schema:'public',table:'products'},()=>loadProducts())
       .subscribe();
 
