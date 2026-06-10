@@ -416,16 +416,22 @@
     function renderProducts(filter) {
       const grid = document.getElementById('products-grid');
       let filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
-      filtered.sort((a, b) => {
-  const parsePrice = p => parseFloat((p.price || '0').replace(/[^0-9.]/g, ''));
+     filtered.sort((a, b) => {
+  const parsePrice = p => parseFloat((p.price || '0').replace(/[^0-9.]/g, '')) || 0;
+  const parseReviews = p => parseInt((p.reviews || '0').toString().replace(/[^0-9]/g, '')) || 0;
 
-  const maxClicks = Math.max(...filtered.map(p => p.clicks || 0), 1);
-  const maxPrice  = Math.max(...filtered.map(p => parsePrice(p)), 1);
+  const maxClicks  = Math.max(...filtered.map(p => p.clicks || 0), 1);
+  const maxPrice   = Math.max(...filtered.map(p => parsePrice(p)), 1);
+  const maxReviews = Math.max(...filtered.map(p => parseReviews(p)), 1);
+  // rating is already 0–5, so max is always 5
+  
+  const score = p =>
+    (0.35 * ((p.rating || 0) / 5)) +
+    (0.30 * (parseReviews(p) / maxReviews)) +
+    (0.25 * ((p.clicks || 0) / maxClicks)) +
+    (0.10 * (parsePrice(p) / maxPrice));
 
-  const scoreA = (0.4 * ((a.clicks || 0) / maxClicks)) + (0.6 * (parsePrice(a) / maxPrice));
-  const scoreB = (0.4 * ((b.clicks || 0) / maxClicks)) + (0.6 * (parsePrice(b) / maxPrice));
-
-  return scoreB - scoreA;
+  return score(b) - score(a);
 });
       grid.innerHTML = '';
       filtered.forEach((p, i) => {
