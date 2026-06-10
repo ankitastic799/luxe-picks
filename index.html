@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LUXE PICKS — Curated Amazon Finds</title>
 
-  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-30KGFNZ9TK"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -26,12 +25,13 @@
       --font-display: 'Cormorant Garamond', Georgia, serif;
       --font-body: 'DM Sans', sans-serif;
       --ease-luxury: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --header-height: 72px;
     }
     html { scroll-behavior: smooth; }
     body { font-family: var(--font-body); background: var(--white); color: var(--ink); min-height: 100vh; overflow-x: hidden; }
 
     /* HEADER */
-    header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,254,249,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--mist); padding: 0 2rem; height: 72px; display: flex; align-items: center; justify-content: space-between; }
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,254,249,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--mist); padding: 0 2rem; height: var(--header-height); display: flex; align-items: center; justify-content: space-between; }
     .logo { font-family: var(--font-display); font-size: 1.6rem; font-weight: 600; letter-spacing: 0.12em; color: var(--ink); text-decoration: none; }
     .logo span { color: var(--gold); }
     nav { display: flex; gap: 2rem; align-items: center; }
@@ -41,7 +41,7 @@
     .nav-cta:hover { background: var(--gold) !important; color: var(--ink) !important; }
 
     /* HERO */
-    .hero { margin-top: 72px; min-height: 92vh; display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
+    .hero { margin-top: var(--header-height); min-height: 92vh; display: grid; grid-template-columns: 1fr 1fr; position: relative; overflow: hidden; }
     .hero-left { background: var(--ink); display: flex; flex-direction: column; justify-content: center; padding: 6rem 5rem 6rem 6rem; position: relative; }
     .hero-left::after { content: ''; position: absolute; right: -1px; top: 0; bottom: 0; width: 80px; background: linear-gradient(to right, transparent, var(--smoke)); z-index: 2; }
     .hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 1rem; }
@@ -77,9 +77,22 @@
     .section-link:hover { gap: 0.85rem; }
     .section-link::after { content: '→'; }
 
-    /* FILTERS */
-    .filters { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 2.5rem; }
-    .filter-pill { padding: 0.45rem 1.2rem; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--mist); background: var(--white); color: var(--silver); cursor: pointer; border-radius: 100px; transition: all 0.2s; }
+    /* STICKY FILTERS */
+    .filters-sticky-wrapper {
+      position: sticky;
+      top: var(--header-height);
+      z-index: 90;
+      background: rgba(255,254,249,0.96);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--mist);
+      padding: 0.75rem 5vw;
+      margin: 0 calc(-5vw);
+      width: calc(100% + 10vw);
+      margin-bottom: 2rem;
+    }
+    .filters { display: flex; flex-wrap: nowrap; gap: 0.6rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 2px; }
+    .filters::-webkit-scrollbar { display: none; }
+    .filter-pill { flex-shrink: 0; padding: 0.45rem 1.2rem; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--mist); background: var(--white); color: var(--silver); cursor: pointer; border-radius: 100px; transition: all 0.2s; white-space: nowrap; font-family: var(--font-body); }
     .filter-pill:hover, .filter-pill.active { background: var(--ink); border-color: var(--ink); color: var(--white); }
 
     /* PRODUCT GRID */
@@ -92,7 +105,8 @@
     .product-badge { position: absolute; top: 1rem; left: 1rem; background: var(--gold); color: var(--ink); font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.3rem 0.7rem; }
     .badge-new { background: var(--ink); color: var(--white); }
     .badge-sale { background: #C94C4C; color: var(--white); }
-    .click-badge{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.7);color:#fff;padding:4px 8px;border-radius:20px;font-size:12px;z-index:2;} .quick-view { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--ink); color: var(--white); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.5rem 1.2rem; white-space: nowrap; opacity: 0; transition: opacity 0.25s, transform 0.25s; }
+    .click-badge { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,.7); color: #fff; padding: 4px 8px; border-radius: 20px; font-size: 12px; z-index: 2; }
+    .quick-view { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%) translateY(10px); background: var(--ink); color: var(--white); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.5rem 1.2rem; white-space: nowrap; opacity: 0; transition: opacity 0.25s, transform 0.25s; }
     .product-card:hover .quick-view { opacity: 1; transform: translateX(-50%) translateY(0); }
     .wish-btn { position: absolute; top: 1rem; right: 1rem; width: 36px; height: 36px; background: var(--white); border: 1px solid var(--mist); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; z-index: 2; }
     .wish-btn:hover { background: var(--gold); border-color: var(--gold); }
@@ -126,39 +140,9 @@
     .stat-number em { font-style: italic; color: var(--gold); }
     .stat-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--silver); margin-top: 0.3rem; }
 
-    /* CATEGORIES */
-    .categories-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
-    .cat-card { position: relative; overflow: hidden; aspect-ratio: 3/4; text-decoration: none; display: block; cursor: pointer; }
-    .cat-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease-luxury); }
-    .cat-card:hover img { transform: scale(1.08); }
-    .cat-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(14,13,11,0.8) 0%, rgba(14,13,11,0.1) 60%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 1.5rem; }
-    .cat-name { font-family: var(--font-display); font-size: 1.4rem; font-weight: 300; color: var(--white); line-height: 1.2; }
-    .cat-count { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-light); margin-top: 0.25rem; }
-    .cat-arrow { position: absolute; top: 1rem; right: 1rem; width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-size: 0.9rem; opacity: 0; transform: rotate(-45deg); transition: opacity 0.25s, transform 0.25s; }
-    .cat-card:hover .cat-arrow { opacity: 1; transform: rotate(0); }
-
-    /* NEWSLETTER */
-    .newsletter { background: var(--smoke); padding: 6rem 5vw; text-align: center; border-top: 1px solid var(--mist); }
-    .newsletter-eyebrow { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 1rem; }
-    .newsletter-title { font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 300; color: var(--ink); margin-bottom: 0.8rem; }
-    .newsletter-title em { font-style: italic; color: var(--gold); }
-    .newsletter-desc { color: var(--silver); font-size: 0.9rem; line-height: 1.7; max-width: 460px; margin: 0 auto 2rem; }
-    .newsletter-form { display: flex; gap: 0; max-width: 440px; margin: 0 auto; border: 1px solid var(--mist); overflow: hidden; }
-    .newsletter-form input { flex: 1; padding: 0.9rem 1.2rem; border: none; outline: none; font-family: var(--font-body); font-size: 0.85rem; background: var(--white); color: var(--ink); }
-    .newsletter-form button { background: var(--ink); color: var(--white); border: none; cursor: pointer; padding: 0.9rem 1.5rem; font-family: var(--font-body); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; transition: background 0.2s; white-space: nowrap; }
-    .newsletter-form button:hover { background: var(--gold); color: var(--ink); }
-
     /* FOOTER */
-    footer { background: var(--ink); color: var(--silver); padding: 4rem 5vw 2rem; }
-    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
-    .footer-brand .logo { color: var(--white); display: block; margin-bottom: 1rem; }
-    .footer-brand p { font-size: 0.85rem; line-height: 1.7; color: var(--silver); max-width: 260px; }
-    .footer-col h4 { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--white); margin-bottom: 1rem; font-weight: 500; }
-    .footer-col ul { list-style: none; }
-    .footer-col ul li { margin-bottom: 0.5rem; }
-    .footer-col ul li a { color: var(--silver); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
-    .footer-col ul li a:hover { color: var(--gold); }
-    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    footer { background: var(--ink); color: var(--silver); padding: 2rem 5vw; }
+    .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
     .footer-bottom p { font-size: 0.78rem; }
     .footer-disclaimer { font-size: 0.72rem; color: rgba(255,255,255,0.35); max-width: 500px; text-align: right; line-height: 1.5; }
 
@@ -194,18 +178,18 @@
       .featured-banner { grid-template-columns: 1fr; }
       .featured-content { padding: 3.5rem 2.5rem; }
       .featured-img { min-height: 300px; order: -1; }
-      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
       .stats-bar { grid-template-columns: 1fr 1fr; }
     }
 
     /* MOBILE */
     @media (max-width: 640px) {
+      :root { --header-height: 60px; }
       header { padding: 0 1.25rem; height: 60px; }
       .logo { font-size: 1.3rem; }
       nav { display: none; }
       .hamburger { display: flex; }
       .mobile-menu { display: flex; top: 60px; }
-      .hero { margin-top: 60px; min-height: auto; grid-template-columns: 1fr; }
+      .hero { min-height: auto; grid-template-columns: 1fr; }
       .hero-left { padding: 3rem 1.25rem 3rem; }
       .hero-left::after { display: none; }
       .hero-title { font-size: clamp(2.2rem, 10vw, 3rem); }
@@ -220,9 +204,8 @@
       .section { padding: 3rem 1.25rem; }
       .section-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; margin-bottom: 2rem; }
       .section-title { font-size: clamp(1.6rem, 7vw, 2.2rem); }
-      .filters { flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; gap: 0.5rem; padding-bottom: 0.5rem; scrollbar-width: none; margin-bottom: 1.5rem; }
-      .filters::-webkit-scrollbar { display: none; }
-      .filter-pill { flex-shrink: 0; padding: 0.5rem 1rem; font-size: 0.72rem; }
+      .filters-sticky-wrapper { padding: 0.6rem 1.25rem; margin: 0 -1.25rem; width: calc(100% + 2.5rem); margin-bottom: 1.5rem; }
+      .filter-pill { padding: 0.5rem 1rem; font-size: 0.72rem; }
       .products-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
       .product-info { padding: 0.75rem 0.85rem 0.9rem; }
       .product-brand { font-size: 0.58rem; }
@@ -241,19 +224,7 @@
       .featured-img { min-height: 220px; order: 1; }
       .featured-title { font-size: clamp(1.6rem, 7vw, 2.5rem); }
       .featured-desc { font-size: 0.85rem; max-width: 100%; }
-      .categories-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-      .cat-card { aspect-ratio: 2/3; }
-      .cat-name { font-size: 1rem; }
-      .cat-count { font-size: 0.62rem; }
-      .newsletter { padding: 3.5rem 1.25rem; }
-      .newsletter-title { font-size: clamp(1.5rem, 7vw, 2.2rem); }
-      .newsletter-desc { font-size: 0.85rem; }
-      .newsletter-form { flex-direction: column; border: none; gap: 0.5rem; }
-      .newsletter-form input { border: 1px solid var(--mist); border-radius: 2px; padding: 0.9rem 1rem; font-size: 0.9rem; }
-      .newsletter-form button { padding: 0.9rem; width: 100%; font-size: 0.78rem; }
-      .footer-grid { grid-template-columns: 1fr; gap: 1.75rem; padding-bottom: 0; }
-      footer { padding: 3rem 1.25rem 1.5rem; }
-      .footer-brand p { max-width: 100%; }
+      footer { padding: 1.5rem 1.25rem; }
       .footer-bottom { flex-direction: column; align-items: center; text-align: center; gap: 0.75rem; }
       .footer-disclaimer { text-align: center; max-width: 100%; font-size: 0.68rem; }
       .toast { bottom: 1rem; right: 1rem; left: 1rem; font-size: 0.78rem; text-align: center; }
@@ -272,7 +243,6 @@
     <nav>
       <a href="#featured">Featured</a>
       <a href="#trending">Trending</a>
-      <a href="#categories">Categories</a>
       <a href="#" class="nav-cta">Shop All</a>
     </nav>
     <button class="hamburger" id="hamburger" aria-label="Open menu">
@@ -283,7 +253,6 @@
   <div class="mobile-menu" id="mobile-menu">
     <a href="#featured" onclick="closeMobileMenu()">Featured</a>
     <a href="#trending" onclick="closeMobileMenu()">Trending</a>
-    <a href="#categories" onclick="closeMobileMenu()">Categories</a>
     <a href="https://www.amazon.in" target="_blank" rel="noopener">Shop on Amazon ↗</a>
     <p class="mobile-menu-footer">✦ Curated Amazon Finds</p>
   </div>
@@ -295,7 +264,7 @@
       <p class="hero-desc">Expertly curated Amazon finds — from premium tech to home essentials. Every product hand-picked for quality, value, and style.</p>
       <div class="hero-actions">
         <a href="#trending" class="btn-primary">Explore Collection</a>
-        <a href="#categories" class="btn-outline">Browse Categories</a>
+        <a href="#featured" class="btn-outline">Editor's Pick</a>
       </div>
     </div>
     <div class="hero-right">
@@ -343,14 +312,21 @@
       <h2 class="section-title">Trending <em>Right Now</em></h2>
       <a href="https://www.amazon.in/bestsellers" target="_blank" rel="noopener" class="section-link">View All</a>
     </div>
-    <div class="filters reveal">
-      <button class="filter-pill active" data-filter="all">All</button>
-      <button class="filter-pill" data-filter="tech">Tech</button>
-      <button class="filter-pill" data-filter="home">Home</button>
-      <button class="filter-pill" data-filter="fashion">Fashion</button>
-      <button class="filter-pill" data-filter="beauty">Beauty</button>
-      <button class="filter-pill" data-filter="sports">Sports</button>
+
+    <!-- STICKY FILTER BAR -->
+    <div class="filters-sticky-wrapper">
+      <div class="filters" id="filters">
+        <button class="filter-pill active" data-filter="all">All</button>
+        <button class="filter-pill" data-filter="home-decor">Home Decor</button>
+        <button class="filter-pill" data-filter="kitchen">Kitchen Finds</button>
+        <button class="filter-pill" data-filter="beauty">Beauty</button>
+        <button class="filter-pill" data-filter="mens-fashion">Men's Fashion</button>
+        <button class="filter-pill" data-filter="womens-fashion">Women's Fashion</button>
+        <button class="filter-pill" data-filter="kids">Kids</button>
+        <button class="filter-pill" data-filter="misc">Miscellaneous</button>
+      </div>
     </div>
+
     <div class="products-grid" id="products-grid"></div>
   </section>
 
@@ -366,97 +342,38 @@
     </div>
   </section>
 
-  <section class="section" id="categories">
-    <div class="section-header reveal">
-      <h2 class="section-title">Shop by <em>Category</em></h2>
-      <a href="https://www.amazon.in" target="_blank" rel="noopener" class="section-link">All Categories</a>
-    </div>
-    <div class="categories-grid reveal" id="categories-grid"></div>
-  </section>
-
-  <section class="newsletter reveal">
-    <p class="newsletter-eyebrow">Stay in the Know</p>
-    <h2 class="newsletter-title">Get <em>Exclusive</em> Deals<br/>Before Everyone Else</h2>
-    <p class="newsletter-desc">Join 50,000+ smart shoppers. We send curated picks, price drops, and Amazon lightning deals — no spam, ever.</p>
-    <div class="newsletter-form">
-      <input type="email" placeholder="your@email.com" id="email-input" />
-      <button onclick="subscribeNewsletter()">Subscribe</button>
-    </div>
-  </section>
-
   <footer>
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a class="logo" href="#">LUXE<span>✦</span>PICKS</a>
-        <p>Curating the finest products from Amazon India — saving you time, money, and the scroll.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Explore</h4>
-        <ul>
-          <li><a href="#trending">Trending</a></li>
-          <li><a href="#featured">Featured</a></li>
-          <li><a href="#categories">Categories</a></li>
-          <li><a href="https://www.amazon.in/deals" target="_blank" rel="noopener">Today's Deals</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Categories</h4>
-        <ul>
-          <li><a href="https://www.amazon.in/electronics" target="_blank" rel="noopener">Electronics</a></li>
-          <li><a href="https://www.amazon.in/home" target="_blank" rel="noopener">Home & Kitchen</a></li>
-          <li><a href="https://www.amazon.in/fashion" target="_blank" rel="noopener">Fashion</a></li>
-          <li><a href="https://www.amazon.in/beauty" target="_blank" rel="noopener">Beauty</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>About</h4>
-        <ul>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Affiliate Disclosure</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Contact</a></li>
-        </ul>
-      </div>
-    </div>
     <div class="footer-bottom">
-      <p>© 2025 LuxePicks. All rights reserved.</p>
+      <p style="color: var(--silver);">© 2025 LuxePicks. All rights reserved.</p>
       <p class="footer-disclaimer">LuxePicks is a participant in the Amazon Associates Programme. We earn a commission from qualifying purchases at no extra cost to you.</p>
     </div>
   </footer>
 
   <div class="toast" id="toast"></div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // ── PRODUCT DATA ──
-    const SUPABASE_URL ='https://ufunylhheocnqnqahmhp.supabase.co';
-    const SUPABASE_ANON_KEY ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmdW55bGhoZW9jbnFucWFobWhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5OTc4MDYsImV4cCI6MjA5NjU3MzgwNn0.U_a-zG8noY6J69pvo4_NQsIdgBTwV2CrC39psovNjZU';
-    const supabaseClient = supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+    const SUPABASE_URL = 'https://ufunylhheocnqnqahmhp.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVmdW55bGhoZW9jbnFucWFobWhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5OTc4MDYsImV4cCI6MjA5NjU3MzgwNn0.U_a-zG8noY6J69pvo4_NQsIdgBTwV2CrC39psovNjZU';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     let products = [];
 
-    async function loadProducts(){
-      const {data,error}=await supabaseClient.from('products').select('*');
-      if(error){console.error(error);return;}
-      products=data||[];
+    async function loadProducts() {
+      const { data, error } = await supabaseClient.from('products').select('*');
+      if (error) { console.error(error); return; }
+      products = data || [];
       renderProducts(activeFilter);
     }
 
-    async function incrementClick(productId){
-      const product=products.find(p=>p.id===productId);
-      if(!product) return;
-      await supabaseClient.from('products').update({clicks:(product.clicks||0)+1}).eq('id',productId);
+    async function incrementClick(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+      await supabaseClient.from('products').update({ clicks: (product.clicks || 0) + 1 }).eq('id', productId);
     }
 
     supabaseClient.channel('products-live')
-      .on('postgres_changes',{event:'*',schema:'public',table:'products'},()=>loadProducts())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => loadProducts())
       .subscribe();
-
-const categories = [
-      { name: "Electronics", count: "2,400+ items", img: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=500&q=80", url: "https://www.amazon.in/electronics" },
-      { name: "Home & Kitchen", count: "5,100+ items", img: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=500&q=80", url: "https://www.amazon.in/home-kitchen" },
-      { name: "Fashion", count: "9,800+ items", img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500&q=80", url: "https://www.amazon.in/fashion" },
-      { name: "Beauty", count: "3,200+ items", img: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=500&q=80", url: "https://www.amazon.in/beauty" },
-      { name: "Sports", count: "4,500+ items", img: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=500&q=80", url: "https://www.amazon.in/sports" },
-    ];
 
     let activeFilter = 'all';
 
@@ -468,35 +385,24 @@ const categories = [
       return s;
     }
 
-    // ── GA4 TRACKING HELPERS ──
     function trackProductClick(product) {
       if (typeof gtag === 'undefined') return;
       gtag('event', 'product_click', {
-        product_id:       product.id,
-        product_name:     product.name,
-        product_brand:    product.brand,
-        product_price:    product.price,
+        product_id: product.id, product_name: product.name,
+        product_brand: product.brand, product_price: product.price,
         product_category: product.category
       });
     }
 
     function trackFeaturedClick() {
       if (typeof gtag === 'undefined') return;
-      gtag('event', 'featured_click', {
-        product_name: 'Sony WH-1000XM5',
-        location: 'featured_banner'
-      });
+      gtag('event', 'featured_click', { product_name: 'Sony WH-1000XM5', location: 'featured_banner' });
     }
 
-    function trackCategoryClick(name) {
-      if (typeof gtag === 'undefined') return;
-      gtag('event', 'category_click', { category_name: name });
-    }
-
-    // ── RENDER PRODUCTS ──
     function renderProducts(filter) {
       const grid = document.getElementById('products-grid');
-      let filtered = filter === 'all' ? products : products.filter(p => p.category === filter); filtered.sort((a,b)=>(b.clicks||0)-(a.clicks||0));
+      let filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+      filtered.sort((a, b) => (b.clicks || 0) - (a.clicks || 0));
       grid.innerHTML = '';
       filtered.forEach((p, i) => {
         const card = document.createElement('a');
@@ -504,13 +410,13 @@ const categories = [
         card.href = p.url;
         card.target = '_blank';
         card.rel = 'noopener noreferrer';
-        // ── TRACK CLICK ──
-        card.addEventListener('click', async () => {trackProductClick(p); await incrementClick(p.id);});
+        card.addEventListener('click', async () => { trackProductClick(p); await incrementClick(p.id); });
         card.innerHTML = `
           <div class="product-img-wrap">
             <img src="${p.img}" alt="${p.name}" loading="lazy" />
             ${p.badge ? `<span class="product-badge ${p.badgeClass}">${p.badge}</span>` : ''}
-            <span class="quick-view">View on Amazon</span><div class="click-badge">❤️ ${p.clicks || 0}</div>
+            <span class="quick-view">View on Amazon</span>
+            <div class="click-badge">❤️ ${p.clicks || 0}</div>
             <button class="wish-btn" onclick="wishlist(event, ${p.id})" aria-label="Save to wishlist">♡</button>
           </div>
           <div class="product-info">
@@ -534,29 +440,6 @@ const categories = [
       observeReveal();
     }
 
-    // ── RENDER CATEGORIES ──
-    function renderCategories() {
-      const grid = document.getElementById('categories-grid');
-      categories.forEach((c, i) => {
-        const card = document.createElement('a');
-        card.className = 'cat-card reveal';
-        card.href = c.url;
-        card.target = '_blank';
-        card.rel = 'noopener noreferrer';
-        card.addEventListener('click', () => trackCategoryClick(c.name));
-        card.innerHTML = `
-          <img src="${c.img}" alt="${c.name}" loading="lazy" />
-          <div class="cat-overlay">
-            <p class="cat-name">${c.name}</p>
-            <p class="cat-count">${c.count}</p>
-          </div>
-          <div class="cat-arrow">↗</div>`;
-        grid.appendChild(card);
-        setTimeout(() => card.classList.add('visible'), 100 + i * 100);
-      });
-    }
-
-    // ── FILTERS ──
     document.querySelectorAll('.filter-pill').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
@@ -577,14 +460,6 @@ const categories = [
       const t = document.getElementById('toast');
       t.textContent = msg; t.classList.add('show');
       setTimeout(() => t.classList.remove('show'), 3000);
-    }
-
-    function subscribeNewsletter() {
-      const input = document.getElementById('email-input');
-      if (!input.value.includes('@')) { showToast('Please enter a valid email.'); return; }
-      if (typeof gtag !== 'undefined') gtag('event', 'newsletter_signup');
-      input.value = '';
-      showToast('✦ Welcome! You\'re on the list.');
     }
 
     const observer = new IntersectionObserver(entries => {
@@ -609,7 +484,6 @@ const categories = [
     }
 
     loadProducts();
-    renderCategories();
     observeReveal();
   </script>
 </body>
