@@ -451,12 +451,8 @@
               <span class="review-count">(${p.reviews})</span>
             </div>
             <div class="product-price-row">
-              <div>
-                ${p.orig ? `<span class="product-price-orig">${p.orig}</span>` : ''}
-                <span class="product-price">${p.price}</span>
-              </div>
               <span class="amazon-btn">Amazon</span>
-            </div>
+              </div>
           </div>`;
         grid.appendChild(card);
         setTimeout(() => card.classList.add('visible'), 50 + i * 80);
