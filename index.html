@@ -474,6 +474,7 @@
         btn.classList.add('active');
         activeFilter = btn.dataset.filter;
         renderProducts(activeFilter);
+        gtag('event', 'category_filter_click', { category: btn.dataset.filter });
       });
     });
 
