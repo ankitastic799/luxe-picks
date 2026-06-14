@@ -96,7 +96,33 @@
     .filters::-webkit-scrollbar { display: none; }
     .filter-pill { flex-shrink: 0; padding: 0.45rem 1.2rem; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--mist); background: var(--white); color: var(--silver); cursor: pointer; border-radius: 100px; transition: all 0.2s; white-space: nowrap; font-family: var(--font-body); }
     .filter-pill:hover, .filter-pill.active { background: var(--ink); border-color: var(--ink); color: var(--white); }
-
+.search-wrap {
+  position: relative;
+  margin-bottom: 1rem;
+}
+.search-wrap .search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+#search-input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  border: 1px solid var(--mist);
+  background: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--ink);
+  outline: none;
+  border-radius: 4px;
+  transition: border-color 0.2s;
+}
+#search-input:focus {
+  border-color: var(--gold);
+}
     /* PRODUCT GRID */
     .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
     .product-card { background: var(--white); border: 1px solid var(--mist); overflow: hidden; position: relative; cursor: pointer; text-decoration: none; display: block; transition: transform 0.35s var(--ease-luxury), box-shadow 0.35s var(--ease-luxury), border-color 0.25s; }
@@ -178,6 +204,10 @@
 
     /* MOBILE */
     @media (max-width: 640px) {
+      #search-input {
+      font-size: 0.8rem;
+      padding: 0.65rem 1rem 0.65rem 2.2rem;
+      }
       :root { --header-height: 60px; }
       header { padding: 0 1.25rem; height: 60px; }
       .logo { font-size: 1.3rem; }
@@ -308,7 +338,10 @@
       <a href="https://www.amazon.in/bestsellers" target="_blank" rel="noopener" class="section-link">View All</a>
       -->
     </div>
-
+<div class="search-wrap">
+  <span class="search-icon">🔍</span>
+  <input type="text" id="search-input" placeholder="Search products..." />
+</div>
     <!-- STICKY FILTER BAR -->
     <div class="filters-sticky-wrapper">
       <div class="filters" id="filters">
@@ -397,64 +430,102 @@
       gtag('event', 'featured_click', { product_name: 'Sony WH-1000XM5', location: 'featured_banner' });
     }
 
-    function renderProducts(filter) {
-      const grid = document.getElementById('products-grid');
-      let filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
-     filtered.sort((a, b) => {
-  const parsePrice = p => parseFloat((p.price || '0').replace(/[^0-9.]/g, '')) || 0;
-  const parseReviews = p => parseInt((p.reviews || '0').toString().replace(/[^0-9]/g, '')) || 0;
+let searchDebounce;
 
-  const maxClicks  = Math.max(...filtered.map(p => p.clicks || 0), 1);
-  const maxPrice   = Math.max(...filtered.map(p => parsePrice(p)), 1);
-  const maxReviews = Math.max(...filtered.map(p => parseReviews(p)), 1);
-  // rating is already 0–5, so max is always 5
-  
+function renderProducts(filter) {
+  const grid = document.getElementById('products-grid');
+  const searchTerm = (document.getElementById('search-input')?.value || '').trim().toLowerCase();
+
+  let filtered = filter === 'all' ? [...products] : products.filter(p => p.category === filter);
+
+  // search filter
+  if (searchTerm) {
+    filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm));
+  }
+
+  // sort by weighted score
+  const parsePrice   = p => parseFloat((p.price || '0').replace(/[^0-9.]/g, '')) || 0;
+  const parseReviews = p => parseInt((p.reviews || '0').toString().replace(/[^0-9]/g, '')) || 0;
+  const maxClicks    = Math.max(...filtered.map(p => p.clicks || 0), 1);
+  const maxPrice     = Math.max(...filtered.map(p => parsePrice(p)), 1);
+  const maxReviews   = Math.max(...filtered.map(p => parseReviews(p)), 1);
+
   const score = p =>
     (0.35 * ((p.rating || 0) / 5)) +
     (0.30 * (parseReviews(p) / maxReviews)) +
     (0.25 * ((p.clicks || 0) / maxClicks)) +
     (0.10 * (parsePrice(p) / maxPrice));
 
-  return score(b) - score(a);
-});
-      grid.innerHTML = '';
-      filtered.forEach((p, i) => {
-        const card = document.createElement('a');
-        card.className = 'product-card reveal';
-        card.href = p.url;
-        card.target = '_blank';
-        card.rel = 'noopener noreferrer';
-        card.addEventListener('click', async () => { trackProductClick(p); await incrementClick(p.id); });
-        card.innerHTML = `
-          <div class="product-img-wrap">
-            <img src="${p.img}" alt="${p.name}" loading="lazy" />
-            ${p.badge ? `<span class="product-badge ${p.badgeClass}">${p.badge}</span>` : ''}
-            <span class="quick-view">View on Amazon</span>
-            <div class="click-badge">👆 ${p.clicks || 0}</div>
-            <button class="wish-btn" onclick="wishlist(event, ${p.id})" aria-label="Save to wishlist">♡</button>
-          </div>
-          <div class="product-info">
-            <p class="product-brand">${p.brand}</p>
-            <h3 class="product-name">${p.name}</h3>
-            <div class="product-price-row">
-              <span class="amazon-btn">Amazon</span>
-              </div>
-          </div>`;
-        grid.appendChild(card);
-        setTimeout(() => card.classList.add('visible'), 50 + i * 80);
-      });
-      observeReveal();
-    }
+  filtered.sort((a, b) => score(b) - score(a));
 
-    document.querySelectorAll('.filter-pill').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        activeFilter = btn.dataset.filter;
-        renderProducts(activeFilter);
-        gtag('event', 'category_filter_click', { category: btn.dataset.filter });
-      });
-    });
+  grid.innerHTML = '';
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<p style="color:var(--silver);font-size:0.9rem;padding:2rem 0;">No products found for "<strong>${searchTerm}</strong>"</p>`;
+    return;
+  }
+
+  filtered.forEach((p, i) => {
+    const card = document.createElement('a');
+    card.className = 'product-card reveal';
+    card.href = p.url;
+    card.target = '_blank';
+    card.rel = 'noopener noreferrer';
+    card.addEventListener('click', async () => { trackProductClick(p); await incrementClick(p.id); });
+    card.innerHTML = `
+      <div class="product-img-wrap">
+        <img src="${p.img}" alt="${p.name}" loading="lazy" />
+        ${p.badge ? `<span class="product-badge ${p.badgeClass}">${p.badge}</span>` : ''}
+        <span class="quick-view">View on Amazon</span>
+        <div class="click-badge">❤️ ${p.clicks || 0}</div>
+        <button class="wish-btn" onclick="wishlist(event, ${p.id})" aria-label="Save to wishlist">♡</button>
+      </div>
+      <div class="product-info">
+        <p class="product-brand">${p.brand}</p>
+        <h3 class="product-name">${p.name}</h3>
+        <div class="product-stars">
+          <span class="stars">${starHTML(p.rating)}</span>
+          <span class="review-count">(${p.reviews})</span>
+        </div>
+        <div class="product-price-row">
+          <span class="amazon-btn">Amazon</span>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+    setTimeout(() => card.classList.add('visible'), 50 + i * 80);
+  });
+  observeReveal();
+}
+    
+
+// filter pills
+document.querySelectorAll('.filter-pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+
+    // clear search when switching category
+    document.getElementById('search-input').value = '';
+
+    gtag('event', 'category_filter_click', { category: btn.dataset.filter });
+    renderProducts(activeFilter);
+  });
+});
+
+// search input — live search + debounced GA4 tracking
+document.getElementById('search-input').addEventListener('input', () => {
+  renderProducts(activeFilter);
+
+  // GA4 tracking — fires 600ms after user stops typing
+  clearTimeout(searchDebounce);
+  const val = document.getElementById('search-input').value.trim();
+  if (val.length > 1) {
+    searchDebounce = setTimeout(() => {
+      gtag('event', 'product_search', { search_term: val });
+    }, 600);
+  }
+});
 
     function wishlist(e, id) {
       e.preventDefault(); e.stopPropagation();
