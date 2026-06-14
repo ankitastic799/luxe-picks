@@ -146,6 +146,69 @@
     .product-price-orig { font-size: 0.85rem; color: var(--silver); text-decoration: line-through; margin-right: 0.5rem; }
     .amazon-btn { display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); font-weight: 500; }
     .amazon-btn::after { content: '→'; transition: transform 0.2s; }
+    /* BLOG SECTION */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+.blog-card {
+  background: var(--white);
+  border: 1px solid var(--mist);
+  overflow: hidden;
+  text-decoration: none;
+  display: block;
+  transition: transform 0.35s var(--ease-luxury), box-shadow 0.35s var(--ease-luxury), border-color 0.25s;
+}
+.blog-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 60px rgba(14,13,11,0.12);
+  border-color: var(--gold-light);
+}
+.blog-img-wrap {
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+.blog-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s var(--ease-luxury);
+}
+.blog-card:hover .blog-img-wrap img {
+  transform: scale(1.06);
+}
+.blog-info {
+  padding: 1.2rem 1.4rem 1.4rem;
+}
+.blog-category {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+.blog-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--ink);
+  margin-bottom: 0.6rem;
+}
+.blog-desc {
+  font-size: 0.85rem;
+  color: var(--silver);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+.blog-read-more {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+}
     .product-card:hover .amazon-btn::after { transform: translateX(3px); }
 
     /* FEATURED BANNER */
@@ -249,6 +312,8 @@
       .footer-bottom { flex-direction: column; align-items: center; text-align: center; gap: 0.75rem; }
       .footer-disclaimer { text-align: center; max-width: 100%; font-size: 0.68rem; }
       .toast { bottom: 1rem; right: 1rem; left: 1rem; font-size: 0.78rem; text-align: center; }
+      .blog-grid { grid-template-columns: 1fr;}
+      .blog-title { font-size: 1rem;}
     }
     @media (max-width: 360px) {
       .products-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
@@ -262,11 +327,12 @@
   <header>
     <a class="logo" href="#">AMAZING<span>✦</span>CURATOR</a>
     <nav>
-      <!--
+    <!--
       <a href="#featured">Featured</a>
       -->
-      <a href="#trending">Trending</a>
-      <a href="#" class="nav-cta">Shop All</a>
+    <a href="#trending">Trending</a>
+    <a href="#blog">Blog</a>
+  <a href="#" class="nav-cta">Shop All</a>
     </nav>
     <button class="hamburger" id="hamburger" aria-label="Open menu">
       <span></span><span></span><span></span>
@@ -274,15 +340,14 @@
   </header>
 
   <div class="mobile-menu" id="mobile-menu">
-   <!--
+  <!--
     <a href="#featured" onclick="closeMobileMenu()">Featured</a>
     -->
-    <a href="#trending" onclick="closeMobileMenu()">Trending</a>
-    <!--
-    <a href="https://www.amazon.in" target="_blank" rel="noopener">Shop on Amazon ↗</a>
-    -->
-    <p class="mobile-menu-footer">✦ Curated Amazon Finds</p>
-  </div>
+  <a href="#trending" onclick="closeMobileMenu()">Trending</a>
+  <a href="#blog" onclick="closeMobileMenu()">Blog</a>
+  <p class="mobile-menu-footer">✦ Curated Amazon Finds</p>
+</div>
+
 
   <section class="hero">
     <div class="hero-left">
@@ -291,11 +356,9 @@
       -->
       <h1 class="hero-title">Discover <em>Extraordinary</em><br/>Products You'll<br/>Actually Love</h1>
       <p class="hero-desc">Expertly curated Amazon finds — from premium tech to home essentials. Every product hand-picked for quality, value, and style.</p>
-      <div class="hero-actions">
-        <a href="#trending" class="btn-primary">Explore Collection</a>
-       <!--
-        <a href="#featured" class="btn-outline">Editor's Pick</a>
-        -->
+     <div class="hero-actions">
+      <a href="#trending" class="btn-primary">Explore Collection</a>
+      <a href="#blog" class="btn-outline">Read Blog</a>
       </div>
     </div>
     <div class="hero-right">
@@ -360,6 +423,31 @@
 
     <div class="products-grid" id="products-grid"></div>
   </section>
+
+  <section class="section" id="blog">
+  <div class="section-header reveal">
+    <h2 class="section-title">Read our <em>Blog</em></h2>
+  </div>
+  <div class="blog-grid reveal">
+
+    <a class="blog-card"
+       href="kitchen-essentials.html"
+       target="_blank"
+       rel="noopener noreferrer"
+       onclick="gtag('event', 'blog_click', { blog_title: '3 Must-Have Kitchen Essentials' })">
+      <div class="blog-img-wrap">
+        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&q=80" alt="Kitchen Essentials" loading="lazy" />
+      </div>
+      <div class="blog-info">
+        <p class="blog-category">Kitchen</p>
+        <h3 class="blog-title">3 Must-Have Kitchen Essentials That Make Everyday Life Easier</h3>
+        <p class="blog-desc">Simple upgrades that keep your kitchen cleaner, more organized, and surprisingly stress-free.</p>
+        <span class="blog-read-more">Read Article →</span>
+      </div>
+    </a>
+
+  </div>
+</section>
 <!--
   <section class="featured-banner reveal" id="featured">
     <div class="featured-content">
