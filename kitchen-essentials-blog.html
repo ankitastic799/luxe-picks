@@ -2,7 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-30KGFNZ9TK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-30KGFNZ9TK');
+</script>
+
   <title>3 Must-Have Kitchen Essentials | Blog</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
   <style>
@@ -51,6 +60,15 @@
       padding: 64px 24px 56px;
       text-align: center;
     }
+    .back-link {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-decoration: none;
+  margin-right: auto;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+    
     .hero .eyebrow {
       font-size: 0.7rem;
       font-weight: 600;
@@ -249,9 +267,10 @@
 </head>
 <body>
 
-  <header>
-    <div class="logo">Kitchen<span>Life</span></div>
-  </header>
+ <header>
+  <a href="index.html" class="back-link">← Back to Amazing Curator</a>
+  <div class="logo">Amazing<span>Curator</span></div>
+</header>
 
   <div class="hero">
     <p class="eyebrow">Home & Kitchen</p>
@@ -361,7 +380,7 @@
   </div>
 
   <footer>
-    &copy; 2026 KitchenLife &mdash; All rights reserved.
+    &copy; 2026 Amazing Curator &mdash; All rights reserved.
   </footer>
 
 </body>
